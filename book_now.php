@@ -18,6 +18,8 @@ date_default_timezone_set('Asia/Kolkata');
 
 $booked_placed_at = date('Y-m-d H:i:s');
 
+$selected_seats = isset($_POST['selected_seats']) ? explode(',', $_POST['selected_seats']) : [];
+
 if(isset($_SESSION['username'])){
 $username = $_SESSION['username'];
 $get_email_query = "SELECT email FROM passengers WHERE username = '$username'";
@@ -78,7 +80,24 @@ while($i == 1){
 
 // echo "INSERT INTO booked set ".$data;
 	$insert = $conn->query("INSERT INTO booked set ".$data);
+
+    // foreach ($selected_seats as $seat_id) {
+    //     $update_seat = $conn->prepare("UPDATE SFH7777 SET availability = 0 WHERE seat_id = ? AND schedule_id = ?");
+    //     $update_seat->bind_param("ii", $seat_id, $sid);
+    //     $update_seat->execute();
+    // }
+
+    $bus_table = $bus_number; // This assumes the bus table name is the bus number
+
+    foreach ($selected_seats as $seat_id) {
+        $update_seat = $conn->prepare("UPDATE $bus_table SET availability = 0 WHERE seat_id = ? AND schedule_id = ?");
+        $update_seat->bind_param("ii", $seat_id, $sid);
+        $update_seat->execute();
+    }
+
 	if($insert){
+
+    $seat_numbers = implode(', ', $selected_seats);
 		    // Sendinblue email sending
 
     // Set your Sendinblue API key here
@@ -109,6 +128,10 @@ while($i == 1){
         <div style="display:flex"> 
         <p>Reserved No of Seats: </p>
         <p style="font-weight: bold">'.$qty.'</p>
+        </div>
+        <div style="display:flex"> 
+        <p>Seat Numbers: </p>
+        <p style="font-weight: bold">'.$seat_numbers.'</p>
         </div>
         </body></html>',
         'textContent' => 'Booking Confirmation - Your booking reference number is '.$ref

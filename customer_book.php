@@ -20,6 +20,17 @@ if (isset($_GET['bid'])) {
         $bmeta[$k] = $val;
     }
 }
+
+$bus_number = $bus['bus_number']; // Get bus number from the query
+$schedule_query = $conn->query("SELECT id FROM schedule_list WHERE bus_id = (SELECT id FROM bus WHERE bus_number = '$bus_number')")->fetch_array();
+$schedule_id = $schedule_query['id'];
+
+// Fetch seat availability based on the current bus's schedule_id
+$seats = $conn->query("SELECT * FROM $bus_number WHERE schedule_id = " . $schedule_id)->fetch_all(MYSQLI_ASSOC);
+$seat_availability = [];
+foreach ($seats as $seat) {
+    $seat_availability[$seat['seat_id']] = $seat['availability'];
+}
 ?>
 
 <style>
@@ -193,41 +204,18 @@ if (isset($_GET['bid'])) {
 
                 <div class="seatContainer">
                     <div class="row">
-                    <div class="seat">1</div>
-                    <div class="seat occuipied">2</div>
-                    <div class="seat occuipied">3</div>
-                    <div class="seat">4</div>
+                        <?php for ($i = 1; $i <= 24; $i++): ?>
+                            <div class="seat <?php echo isset($seat_availability[$i]) && $seat_availability[$i] == 0 ? 'seat occuipied' : ''; ?>" id="<?php echo $i; ?>">
+                                <?php echo $i; ?>
+                            </div>
+                        <?php endfor; ?>
                     </div>
-                    <div class="row">
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat occuipied"></div>
-                    <div class="seat"></div>
-                    </div>
-                    <div class="row">
-                    <div class="seat occuipied"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    </div>
-                    <div class="row">
+                    <!-- <div class="row">
                     <div class="seat"></div>
                     <div class="seat occuipied"></div>
                     <div class="seat"></div>
-                    <div class="seat occuipied"></div>
-                    </div>
-                    <div class="row">
-                    <div class="seat"></div>
-                    <div class="seat occuipied"></div>
-                    <div class="seat occuipied"></div>
-                    <div class="seat"></div>
-                    </div>
-                    <div class="row">
-                    <div class="seat"></div>
-                    <div class="seat occuipied"></div>
-                    <div class="seat"></div>
-                    <div class="seat"></div>
-                    </div>    
+                    <div class="seat"></div> 
+                    </div>     -->
                     <p class="text">
                     You Have Selected <span id="count">0</span> seats for Rs <span id="total">0</span>
                     </p>
@@ -247,24 +235,55 @@ if (isset($_GET['bid'])) {
         container.addEventListener('click', (e) => {
         if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
         e.target.classList.toggle('selected');}
-        // updateSelectedCount()
+        updateSelectedCount()
         });
     </script>
 <script>
-function getValue() {
-    let quantity = document.getElementById("qty");
-    let qtyValue = parseInt(quantity.value); // Convert input value to integer
+    function getValue() {
+        let quantity = document.getElementById("qty");
+        let qtyValue = parseInt(quantity.value); // Convert input value to integer
 
-    let ticketPrice = document.getElementById("price_per_ticket").innerText; // Get text content of price per ticket
-    ticketPrice = parseFloat(ticketPrice); // Convert price to integer (or parseFloat() for decimal values)
+        let ticketPrice = document.getElementById("price_per_ticket").innerText; // Get text content of price per ticket
+        ticketPrice = parseFloat(ticketPrice); // Convert price to integer (or parseFloat() for decimal values)
 
-    let totalPrice = document.getElementById("total_price");
-    totalPrice.innerText = (qtyValue * ticketPrice).toFixed(2);; // Calculate total price and update element
-}
+        let totalPrice = document.getElementById("total_price");
+        totalPrice.innerText = (qtyValue * ticketPrice).toFixed(2);; // Calculate total price and update element
+    }
+    function updateTotalPrice() {
+        let selectedSeats = document.querySelectorAll('.seat.selected').length;
+        let pricePerTicket = parseFloat(document.getElementById('price_per_ticket').innerText);
+        let totalPrice = selectedSeats * pricePerTicket;
+        document.getElementById('total_price').innerText = totalPrice.toFixed(2);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let seats = document.querySelectorAll('.seat');
+        seats.forEach(seat => {
+            seat.addEventListener('click', function () {
+                if (!seat.classList.contains('occuipied')) {
+                    seat.classList.toggle('selected');
+                    updateTotalPrice();
+                    let selectedCount = document.querySelectorAll('.seat.selected').length;
+                    document.getElementById('count').innerText = selectedCount;
+                    document.getElementById('total').innerText = (selectedCount * parseFloat(document.getElementById('price_per_ticket').innerText)).toFixed(2);
+                }
+             });
+        });
+});
 
 
     $('#manage_book').submit(function(e) {
         e.preventDefault();
+        let selectedSeats = [];
+        $('.seat.selected').each(function() {
+            selectedSeats.push($(this).attr('id'));
+        });
+        $('<input>').attr({
+            type: 'hidden',
+            id: 'selected_seats',
+            name: 'selected_seats',
+            value: selectedSeats.join(',')
+        }).appendTo('#manage_book');
         start_load();
         $.ajax({
             url: './book_now.php',
