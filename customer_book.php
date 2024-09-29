@@ -216,62 +216,69 @@ foreach ($seats as $seat) {
                     <div class="seat"></div>
                     <div class="seat"></div> 
                     </div>     -->
-                    <p class="text">
+                    <!-- <p class="text">
                     You Have Selected <span id="count">0</span> seats for Rs <span id="total">0</span>
-                    </p>
+                    </p> -->
                 </div>    
             </div>
         </div>
     </form>
 </div>
-<script>
+    <!--price based on seat selection -->
+    <!-- <script>
         const container = document.querySelector('.seatContainer');
-        const seats = document.querySelectorAll('.row .seat:not(.occuipied');
-        const count = document.getElementById('count');
-        const total = document.getElementById('total');
-        //const busSelect = document.getElementById('bus');
+        const seats = document.querySelectorAll('.row .seat:not(.occuipied)');
+        const qtyInput = document.getElementById('quantity');
+        const displayQty = document.getElementById('display_quantity');
+        const pricePerTicketElem = document.getElementById('price_per_ticket');
+        const totalPriceElem = document.getElementById('total_price');
 
-        //let ticketPrice = busSelect.value;
+        let selectedSeatsCount = 0;
+
         container.addEventListener('click', (e) => {
-        if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
-        e.target.classList.toggle('selected');}
-        updateSelectedCount()
+            if (e.target.classList.contains('seat') && !e.target.classList.contains('occuipied')) {
+                e.target.classList.toggle('selected');
+                updateTotalPrice();
+            }
         });
-    </script>
-<script>
-    function getValue() {
-        let quantity = document.getElementById("qty");
-        let qtyValue = parseInt(quantity.value); // Convert input value to integer
-
-        let ticketPrice = document.getElementById("price_per_ticket").innerText; // Get text content of price per ticket
-        ticketPrice = parseFloat(ticketPrice); // Convert price to integer (or parseFloat() for decimal values)
-
-        let totalPrice = document.getElementById("total_price");
-        totalPrice.innerText = (qtyValue * ticketPrice).toFixed(2);; // Calculate total price and update element
-    }
     function updateTotalPrice() {
-        let selectedSeats = document.querySelectorAll('.seat.selected').length;
-        let pricePerTicket = parseFloat(document.getElementById('price_per_ticket').innerText);
-        let totalPrice = selectedSeats * pricePerTicket;
-        document.getElementById('total_price').innerText = totalPrice.toFixed(2);
+        const selectedSeats = document.querySelectorAll('.row .seat.selected');
+        const selectedCount = selectedSeats.length-1;
+        const pricePerTicket = parseFloat(pricePerTicketElem.innerText);
+        const totalPrice = (selectedCount * pricePerTicket).toFixed(2);
+
+        totalPriceElem.innerText = totalPrice;
+        qtyInput.value = selectedCount; // Update quantity input with selected count
+        displayQty.innerText = selectedCount; // Update display quantity
     }
+        
+    </script> -->
+    <script>
+    const container = document.querySelector('.seatContainer');
+    const seats = document.querySelectorAll('.row .seat:not(.occuipied)');
+    const qtyInput = document.getElementById('qty');
+    const pricePerTicketElem = document.getElementById('price_per_ticket');
+    const totalPriceElem = document.getElementById('total_price');
 
-    document.addEventListener('DOMContentLoaded', function () {
-        let seats = document.querySelectorAll('.seat');
-        seats.forEach(seat => {
-            seat.addEventListener('click', function () {
-                if (!seat.classList.contains('occuipied')) {
-                    seat.classList.toggle('selected');
-                    updateTotalPrice();
-                    let selectedCount = document.querySelectorAll('.seat.selected').length;
-                    document.getElementById('count').innerText = selectedCount;
-                    document.getElementById('total').innerText = (selectedCount * parseFloat(document.getElementById('price_per_ticket').innerText)).toFixed(2);
-                }
-             });
-        });
-});
+    // Listen for clicks on the seat container
+    container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('seat') && !e.target.classList.contains('occuipied')) {
+            e.target.classList.toggle('selected');
+            updateTotalPriceAndQty();  // Update total price and quantity
+        }
+    });
 
+    function updateTotalPriceAndQty() {
+        const selectedSeats = document.querySelectorAll('.row .seat.selected');
+        const selectedCount = selectedSeats.length-1;
+        const pricePerTicket = parseFloat(pricePerTicketElem.innerText);
+        const totalPrice = (selectedCount * pricePerTicket).toFixed(2);
 
+        totalPriceElem.innerText = totalPrice;
+        qtyInput.value = selectedCount;
+    }
+</script>
+    <script>
     $('#manage_book').submit(function(e) {
         e.preventDefault();
         let selectedSeats = [];
@@ -315,6 +322,7 @@ foreach ($seats as $seat) {
         startDate: '+3d'
     });
 </script>
+
 
 <!-- <script>
     $('#manage_book').submit(function(e) {

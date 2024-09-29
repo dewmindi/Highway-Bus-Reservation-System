@@ -7,7 +7,7 @@ include 'db_connect.php'; // Include the database connection
 $username = $_SESSION['username'];
 
 // Query to fetch all canceled bookings by the logged-in user
-$query = "SELECT * FROM canceled WHERE username = ? ORDER BY booked_at DESC";
+$query = "SELECT * FROM canceled WHERE username = ? ORDER BY date DESC";
 $stmt = $pdo->prepare($query);
 $stmt->execute([$username]);
 $canceledBookings = $stmt->fetchAll(PDO::FETCH_ASSOC);

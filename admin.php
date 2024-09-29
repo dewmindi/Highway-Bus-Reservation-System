@@ -62,7 +62,7 @@
                 window.location.href = 'admin_login_form.php'; // Change this to the correct URL for the admin login page
             });
             document.getElementById('passenger-login').addEventListener('click', function() {
-                window.location.href = 'passenger_login_form.php'; // Change this to the correct URL for the passenger login page
+                window.location.href = 'passenger_new_login_form.php'; // Change this to the correct URL for the passenger login page
             });
 
             $('#login-frm').submit(function(e){

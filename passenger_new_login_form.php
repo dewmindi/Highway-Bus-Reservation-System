@@ -1,84 +1,9 @@
-<?php
-session_start();
-include('db_connect.php');
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect and sanitize input data
-    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-    $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-
-    try {
-        // Input validation
-        if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
-            throw new Exception('All fields are required.');
-        }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception('Invalid email format.');
-        }
-
-        if ($password !== $confirm_password) {
-            throw new Exception('Passwords do not match.');
-        }
-
-        // Hash the password
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-        // Check if the username or email already exists
-        $stmt = $conn->prepare("SELECT id FROM passengers WHERE username = ? OR email = ?");
-        if ($stmt === false) {
-            throw new Exception('Prepare statement failed: ' . $conn->error);
-        }
-        $stmt->bind_param("ss", $username, $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            throw new Exception('Username or email already exists.');
-        }
-
-        $stmt->close();
-
-        // Insert new passenger into the database
-        $stmt = $conn->prepare("INSERT INTO passengers (username, email, password) VALUES (?, ?, ?)");
-        if ($stmt === false) {
-            throw new Exception('Prepare statement failed: ' . $conn->error);
-        }
-
-        $stmt->bind_param("sss", $username, $email, $hashed_password);
-        if ($stmt->execute()) {
-            // Store user details in session
-            $_SESSION['login_passenger'] = $stmt->insert_id;
-            $_SESSION['username'] = $username;
-            $_SESSION['email'] = $email;
-            $_SESSION['role'] = 'passenger';
-
-            // Registration successful, send response
-            echo 1; // success
-        } else {
-            throw new Exception('Error during registration: ' . $stmt->error);
-        }
-
-        $stmt->close();
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        http_response_code(400);
-        echo $e->getMessage();
-    }
-
-    $conn->close();
-    exit; // End the script after handling POST request
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | Online Bus Reservation</title>
+    <title>Login | Online Bus Reservation</title>
     <style>
         * {
             margin: 0;
@@ -86,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-sizing: border-box;
         }
         body {
-            background:  #f0f4f8;
+            background: #f0f4f8;
             font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
@@ -187,61 +112,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .form-group button:active {
             transform: scale(0.98);
         }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        .links a:hover {
+            color: #0056b3;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="card">
         <div class="card-header-edge">
-            Sign Up
+            Login
         </div>
         <div class="card-body">
-            <form id="sign-up-frm" method="POST">
+            <form id="login-frm" method="POST">
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="email">Username</label>
                     <input type="text" id="username" name="username" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="confirm_password">Confirm Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+                    <button type="submit" class="btn btn-success btn-block">Login</button>
                 </div>
             </form>
+            <div class="links">
+                <a href="sign_up.php">Sign Up</a> | <a href="index.php">Home</a>
+            </div>
         </div>
     </div>
 
     <script>
         $(document).ready(function(){
-            $('#sign-up-frm').submit(function(e){
+            $('#login-frm').submit(function(e){
                 e.preventDefault();
-                $('button').attr('disabled', true).text('Submitting...');
-                
+                $('#login-frm button').attr('disabled', true).text('Checking details...');
+
                 $.ajax({
-                    url: 'sign_up.php', // Same file for handling form submission
+                    url: 'passenger_login_auth.php',
                     method: 'POST',
                     data: $(this).serialize(),
-                    success: function(response){
-                        if (response == 1) {
-                            // alert('Sign up successful. Redirecting to login page...');
-                            window.location.replace('passenger_new_login_form.php');
-                        } else {
-                            alert(response); // Display error message
-                            $('button').removeAttr('disabled').text('Sign Up');
-                        }
-                    },
-                    error: function(){
+                    error: function(err){
+                        console.error(err);
                         alert('An error occurred. Please try again.');
-                        $('button').removeAttr('disabled').text('Sign Up');
+                        $('#login-frm button').removeAttr('disabled').text('Login');
+                    },
+                    success: function(resp){
+                        if(resp == 1){
+                            location.replace('passenger_profile.php');
+                        } else {
+                            alert("Incorrect username or password.");
+                            $('#login-frm button').removeAttr('disabled').text('Login');
+                        }
                     }
                 });
             });

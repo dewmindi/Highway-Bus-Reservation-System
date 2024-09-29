@@ -6,7 +6,7 @@
       <nav class="nav-menu d-none d-lg-block" id='top-nav'>
         <ul>
           <li class="nav-home"><a href="passenger_profile.php">Home</a></li>
-           <li class="nav-booked"><a href="bookings_ongoing.php">Bookings</a></li>
+           <li class="nav-booked"><a href="booking_ongoing_latest.php">Bookings</a></li>
           <li class="drop-down nav-activities"><a href="#">Activities</a>
               <ul>
                 <li><a href="completed_books.php">Completed</a></li>
