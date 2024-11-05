@@ -50,7 +50,7 @@ Start a local PHP server:
 php -S localhost:8000
 Open http://localhost:8000 in your browser to access the application.
 
-🛠 Usage
+#🛠 Usage
 Booking a Ticket
 Register or log in as a passenger.
 View available schedules and select your preferred seat(s).
@@ -62,7 +62,7 @@ Log in as an admin to access the admin dashboard.
 Manage schedules, buses, and reservations from the dashboard.
 Track and oversee all reservations.
 
-⚖ License
+#⚖ License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
 
