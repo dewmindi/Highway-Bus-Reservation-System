@@ -4,16 +4,16 @@ A full-featured ticket and seat reservation system for passengers and administra
 ## 🌟 Project Overview
 This project offers a seamless ticket booking experience, suitable for unregistered and registered passengers, along with admin capabilities for managing reservations and bus schedules.
 
-## Key Features  
-Passenger Capabilities:
+## Key Features 
 
+### Passenger Capabilities:
 View available bus schedules.  
 Book and reserve seats based on real-time availability.  
 Receive payment confirmations and reservation details via email.  
 Cancel bookings as needed.  
-Access and view booking history.  
-Admin Capabilities:  
+Access and view booking history. 
 
+### Admin Capabilities:  
 Manage reservations and oversee the booking process.  
 Add, edit, or remove bus listings and schedules.  
 Track bookings and monitor system usage to improve customer service.    
