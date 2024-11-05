@@ -4,33 +4,33 @@ A full-featured ticket and seat reservation system for passengers and administra
 ## 🌟 Project Overview
 This project offers a seamless ticket booking experience, suitable for unregistered and registered passengers, along with admin capabilities for managing reservations and bus schedules.
 
-## Key Features
+## Key Features  
 Passenger Capabilities:
 
-View available bus schedules.
-Book and reserve seats based on real-time availability.
-Receive payment confirmations and reservation details via email.
-Cancel bookings as needed.
-Access and view booking history.
-Admin Capabilities:
+View available bus schedules.  
+Book and reserve seats based on real-time availability.  
+Receive payment confirmations and reservation details via email.  
+Cancel bookings as needed.  
+Access and view booking history.  
+Admin Capabilities:  
 
-Manage reservations and oversee the booking process.
-Add, edit, or remove bus listings and schedules.
-Track bookings and monitor system usage to improve customer service.  
-## 💻 Tech Stack
-Frontend: HTML, CSS, JavaScript, Bootstrap
-Backend: PHP
-Database: phpMyAdmin (MySQL)
-Email Notifications: SendinBlue API for automated reservation and payment confirmations.
-Payments: Stripe integration for secure payment processing.
-🚀 Getting Started
-To get a local copy of the project up and running, follow these steps.
+Manage reservations and oversee the booking process.  
+Add, edit, or remove bus listings and schedules.  
+Track bookings and monitor system usage to improve customer service.    
+## 💻 Tech Stack  
+Frontend: HTML, CSS, JavaScript, Bootstrap  
+Backend: PHP  
+Database: MySQL  
+Email Notifications: SendinBlue API for automated reservation and payment confirmations.  
+Payments: Stripe integration for secure payment processing.  
+🚀 Getting Started  
+To get a local copy of the project up and running, follow these steps.  
 
-Prerequisites
-PHP >= 7.4
-MySQL (phpMyAdmin)
-Stripe account for payment processing
-SendinBlue account for email services
+Prerequisites  
+PHP >= 7.4  
+MySQL (phpMyAdmin)  
+Stripe account for payment processing  
+SendinBlue account for email services  
 
 ## Installation
 1.Clone the Repository:  
@@ -62,7 +62,7 @@ Log in as an admin to access the admin dashboard.
 Manage schedules, buses, and reservations from the dashboard.
 Track and oversee all reservations.
 
-##⚖ License
+## ⚖ License  
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
 
