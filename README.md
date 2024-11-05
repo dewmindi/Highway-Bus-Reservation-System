@@ -22,17 +22,19 @@ Frontend: HTML, CSS, JavaScript, Bootstrap
 Backend: PHP  
 Database: MySQL  
 Email Notifications: SendinBlue API for automated reservation and payment confirmations.  
-Payments: Stripe integration for secure payment processing.  
-🚀 Getting Started  
+Payments: Stripe integration for secure payment processing.
+
+## 🚀 Getting Started  
 To get a local copy of the project up and running, follow these steps.  
 
-Prerequisites  
+### Prerequisites  
 PHP >= 7.4  
 MySQL (phpMyAdmin)  
 Stripe account for payment processing  
 SendinBlue account for email services  
 
 ## Installation
+
 1.Clone the Repository:  
 git clone https://github.com/your-username/your-repo-name.git  
 cd your-repo-name
