@@ -36,8 +36,8 @@ SendinBlue account for email services
 ## Installation
 
 1.Clone the Repository:  
-git clone https://github.com/your-username/your-repo-name.git  
-cd your-repo-name
+git clone https://github.com/dewmindi/Highway-Bus-Reservation-System.git  
+cd Highway-Bus-Reservation-System
 
 2.Setup Database:    
 Import the SQL file (provided in the repository) into phpMyAdmin to set up the database tables.
